@@ -1,3 +1,6 @@
+USE [zbwms_EnHua]
+GO
+
 ALTER  PROC  ProcPtsServiceCorpMatchList9701 
 @UserID INT ,
 @Parastr varchar(2000)
@@ -29,8 +32,3 @@ AS
     SET @caluse=@caluse+ 'AND cl.corpname LIKE ' + '%'+@SearchName+'%'
     SET @sql = @sql + @caluse 
     EXEC (@sql)
-    
-     
-    
-    
-    
