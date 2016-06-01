@@ -18,9 +18,9 @@ AS
     SET    @MatchType=@paraout  
     set @sql='
     SELECT  cu.ClientName,cu.clientid ,cl.corpname,cl.ServiceID,cl.CorpID,(case when cu.matchtype=1 THEN ''“—∆•≈‰'' else  ''Œ¥∆•≈‰'' end) statu
-    FROM clientunit cu 
+    FROM TabPtsServiceCorpList AS cl 
    
-    left JOIN TabPtsServiceCorpList AS cl ON cl.corpname=cu.clientname '
+    left JOIN clientunit cu  ON cl.corpname=cu.clientname '
    
     IF @MatchType=0 
     SET @caluse= 'WHERE cu.ClientName LIKE ''%π˛“©%'' and cu.used=1 '
