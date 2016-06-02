@@ -1,5 +1,4 @@
-USE [zbwms_EnHua]
-GO
+--Æ¥Åä²Ù×÷¼ÇÂ¼²éÑ¯
 
 ALTER  PROC  ProcPtsServiceCorpMatchList9701 
 @UserID INT ,
@@ -23,11 +22,11 @@ AS
     left JOIN clientunit cu  ON cl.corpname=cu.clientname '
    
     IF @MatchType=0 
-    SET @caluse= 'WHERE cu.ClientName LIKE ''%¹þÒ©%'' and cu.used=1 '
+    SET @caluse= 'WHERE cu.iscustom=1 and cu.used=1 '
     IF @MatchType=1
-    SET @caluse='WHERE cu.ClientName LIKE ''%¹þÒ©%'' and cu.used=1  and cu.MatchType=1'
+    SET @caluse='WHERE cu.iscustom=1 and cu.used=1  and cu.MatchType=1'
     IF @MatchType=2 
-    SET @caluse='WHERE cu.ClientName LIKE ''%¹þÒ©%'' and cu.used=1  and cu.MatchType=2'
+    SET @caluse='WHERE cu.iscustom=1 and cu.used=1  and cu.MatchType=2'
     IF @SearchName!=''
     SET @caluse=@caluse+ 'AND cl.corpname LIKE ' + '%'+@SearchName+'%'
     SET @sql = @sql + @caluse 

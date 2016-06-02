@@ -1,3 +1,5 @@
+
+---½â³ýÆ¥Åä
 ALTER  PROC  ProcPtsServiceCorpDismatch9701 
 @UserID int, 
 @ServiceID int, 
@@ -11,9 +13,9 @@ SELECT  cl.ServiceID,cl.CorpID,cu.clientid INTO #temp
 FROM 
 tabptsservicecorplist AS cl 
 INNER JOIN  clientunit AS cu ON cu.clientname =cl.CorpName 
-WHERE  cl.serviceid=@ServiceID AND cl.corpid=@SysCorpID  AND cu.USED=1 
+WHERE  cl.serviceid=@ServiceID AND cl.corpid=@SysCorpID  AND cu.USED=1 AND cu.IsCustom=1
 update A SET matchtype = 2 
- from clientunit A inner join #temp B on A.clientid = B.clientid  WHERE a.matchtype=1  
+ from clientunit A inner join #temp B on A.clientid = B.clientid  WHERE a.MatchType=1 
 IF @@ROWCOUNT>0
 	BEGIN 
 	DELETE TabPtsServiceCorpMap WHERE clientid=@ClientID and ServiceID=@ServiceID and SysCorpID=@SysCorpID 
@@ -21,4 +23,3 @@ IF @@ROWCOUNT>0
 	END
 ELSE 
 	SELECT -2333, '½â³ýÊ§°Ü'
-	
