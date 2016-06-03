@@ -1,10 +1,12 @@
+USE [zbwms_EnHua]
+GO
 
-CREATE  proc [dbo].[ProcPtsSERVICE_LOGIN] 
+ALTER  proc [dbo].[ProcPtsSERVICE_LOGIN] 
 	@ServiceID int,
-	@ServiceTypeName varchar(50),
+	@ServiceTypeName nvarchar(50),
 	@ServiceKey varchar(50),
 	@IsActive int = 1,
-	@ErrorMsg varchar(500) = '',
+	@ErrorMsg nvarchar(500) = '',
 	@IPAddress VARCHAR(30) = ''
 as 
 	if @isactive = 1 

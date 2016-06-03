@@ -14,7 +14,6 @@ DECLARE @clientid INT
 DECLARE @matchtype INT 
 DECLARE @t1 nvarchar(MAX)
 DECLARE @t2 varchar(MAX)
-DECLARE @t3 varchar(MAX)
 
 SELECT TOP 1 @listid=listid  FROM TabPtsServiceUpLog AS ul WHERE ul.UpStatus=1
 
@@ -57,21 +56,12 @@ IF (@matchtype=2)
  		gb.goodsname  +'|'+         -- productName
  		gb.unit  +'|'+              -- productUnit
  		 convert(varchar,gb.ProviderID)  +'|'+       -- produceCorpId
- 		gb.Quality		+'|'+				--produceCorpcode
  		gb.ProduceArea   +'|'+         -- produceCorpName
  		wi.BatchNo   +'|'+          --produceBatchNo
- 		convert(varchar,wi.Amount ) +'|' +   --displayAmount
- 		gb.unit  +'|'+               -- displayProductUnit
+ 		''  +'|' +              --displayAmount
+ 		''  +'|'+               -- displayProductUnit
  		convert(varchar,wi.Amount) yy  ,     -- amount
- 		wi.itemid ,
- 		er.EPSCCode ,
- 		
- 		(convert(varchar,pc.worker) +'|'+
- 		convert(varchar(16),pc.scantime,120) +'|'+
- 		'1'    +'|'+
- 		pc.scancode) code
- 		 
- 		
+ 		wi.itemid , er.EPSCCode 
  		INTO #tt
  		FROM TabPtsServiceUpLog AS ul
  		inner join wmsorderlist AS wl ON wl.ListID=ul.ListID
@@ -79,7 +69,7 @@ IF (@matchtype=2)
  		--INNER JOIN clientunit as cu ON cu.clientid=wl.custom
  		INNER JOIN TabPtsServiceCorpMap AS cm ON cm.clientid=wl.custom
  		INNER JOIN TabPtsServiceCorpList AS cl ON cl.corpid=cm.SysCorpID
- 		inner join WMSGoodsProdCode AS pc ON pc.listid=ul.listid
+ 		--inner join WMSGoodsProdCode AS pc ON pc.listid=ul.listid
  		INNER JOIN WMSEPSCRECORD AS er ON (er.ListID= ul.listid AND er.ItemID=ul.ItemID) 
  		INNER JOIN goodsbaseinfo AS gb ON gb.goodsid=wi.GoodsID
  		
@@ -87,10 +77,10 @@ IF (@matchtype=2)
  		
  		IF (@@ROWCOUNT>0)
  		BEGIN 
- 			
+ 			SELECT * FROM #tt
  		SELECT @t1= Stuff((select ','+convert(NVARCHAR(MAX),a.yy) FROM (SELECT yy from #tt GROUP BY yy) a for xml path('')),1,1,'') 
+ 		
  		SELECT @t2= Stuff((select ','+convert(varchar(MAX),a.epsccode) from #tt a for xml path('')),1,1,'') 
- 		SELECT @t3= Stuff((select ','+convert(varchar(MAX),a.code) from #tt a for xml path('')),1,1,'') 
  	    SELECT TOP 1
 		CorpId,		--企业ID
 		CorpCode,		--企业编码
@@ -106,9 +96,8 @@ IF (@matchtype=2)
 		RecCorpId ,  --接受企业
 		RecCorpCode,    --  接收企业编码
 		RecCorpName ,   -- 接收企业名称                  	
-		@t1 AS items,
-		@t2 AS epsccode,
-		@t3 AS code 
+		@t1 AS itemid,
+		@t2 AS CodeId
  	    FROM #tt 
  	    
  		

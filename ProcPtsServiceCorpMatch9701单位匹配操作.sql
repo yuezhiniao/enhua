@@ -1,6 +1,7 @@
 USE [zbwms_EnHua]
 GO
 
+--∆•≈‰≤Ÿ◊˜
 ALTER  proc ProcPtsServiceCorpMatch9701 
 @UserID int, 
 @ServiceID int, 
@@ -17,6 +18,15 @@ BEGIN
 	INNER JOIN  clientunit AS cu ON cu.clientname =cl.CorpName
 	WHERE cu.IsCustom=1
 	AND cu.used=1
+	 
+	INSERT INTO TabPtsServiceCorpMap(ServiceID,SysCorpID,ClientID) 
+	SELECT t.ServiceID,t.CorpID,t.clientid FROM #temp  t WHERE NOT EXISTS 
+	(SELECT '1' FROM TabPtsServiceCorpMap b WHERE  b.SysCorpID=t.corpid)
+	
+	
+		update A SET matchtype = 1 FROM clientunit a inner JOIN #temp B on A.clientid = B.clientid 
+		SELECT '1000', '∆•≈‰≥…π¶'
+	  
 END
 else IF EXISTS (SELECT * FROM TabPtsServiceCorpMap AS tpscm WHERE tpscm.ClientID=@ClientID)
 BEGIN
@@ -25,7 +35,7 @@ BEGIN
 END  
 else 
 BEGIN
-	SELECT  cl.ServiceID,cl.CorpID,cu.clientid INTO #temp
+	SELECT  cl.ServiceID,cl.CorpID,cu.clientid INTO #temp1
 	FROM 
 	tabptsservicecorplist AS cl 
 	INNER JOIN  clientunit AS cu ON cu.clientname =cl.CorpName 
@@ -35,13 +45,14 @@ BEGIN
 	AND cu.USED=1 
 	AND cu.clientid=@clientid
 	AND cu.IsCustom=1
-END 
+ 
 INSERT INTO TabPtsServiceCorpMap(ServiceID,SysCorpID,ClientID) 
-SELECT t.ServiceID,t.CorpID,t.clientid FROM #temp  t 
+SELECT t.ServiceID,t.CorpID,t.clientid FROM #temp1  t 
 IF @@ROWCOUNT>0
 BEGIN 
-	update A SET matchtype = 1 FROM clientunit a inner JOIN #temp B on A.clientid = B.clientid 
+	update A SET matchtype = 1 FROM clientunit a inner JOIN #temp1 B on A.clientid = B.clientid 
 	SELECT '1000', '∆•≈‰≥…π¶'
 	END 
 ELSE 
-	SELECT '-1000', '∆•≈‰ ß∞‹'   
+	SELECT '-1000', '∆•≈‰ ß∞‹'  
+END
